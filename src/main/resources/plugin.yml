@@ -1,0 +1,14 @@
+name: ItemModifiers
+version: '${project.version}'
+main: fr.soraxdubbing.itemmodifiers.ItemModifiers
+api-version: 1.16
+authors: [ SoraxDUbbing ]
+description: Plugin de modification d'items
+depend: [NBTAPI]
+commands:
+  customise:
+    description: Permet de customiser un item
+    usage: /customise <item> <type> <value>
+    aliases: [custom]
+    permission: itemmodifiers.customise
+    permission-message: "&cVous n'avez pas la permission d'utiliser cette commande"

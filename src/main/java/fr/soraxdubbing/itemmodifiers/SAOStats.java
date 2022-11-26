@@ -1,12 +1,8 @@
 package fr.soraxdubbing.itemmodifiers;
 
-import de.tr7zw.nbtapi.NBTCompound;
-import de.tr7zw.nbtapi.NBTCompoundList;
 import de.tr7zw.nbtapi.NBTItem;
 import fr.soraxdubbing.itemmodifiers.commands.CustomiserCommand;
-import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -16,9 +12,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class ItemModifiers extends JavaPlugin implements Listener {
+public final class SAOStats extends JavaPlugin implements Listener {
 
-    private static ItemModifiers instance;
+    private static SAOStats instance;
 
     @Override
     public void onEnable() {
@@ -101,7 +97,7 @@ public final class ItemModifiers extends JavaPlugin implements Listener {
 
     }
 
-    public static ItemModifiers getInstance() {
+    public static SAOStats getInstance() {
         return instance;
     }
 

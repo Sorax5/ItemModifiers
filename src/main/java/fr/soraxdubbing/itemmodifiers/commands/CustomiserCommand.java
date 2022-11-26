@@ -1,18 +1,11 @@
 package fr.soraxdubbing.itemmodifiers.commands;
 
-import de.tr7zw.nbtapi.NBTCompound;
-import de.tr7zw.nbtapi.NBTCompoundList;
 import de.tr7zw.nbtapi.NBTItem;
-import de.tr7zw.nbtapi.NBTListCompound;
-import fr.soraxdubbing.itemmodifiers.Attribute;
 import fr.soraxdubbing.itemmodifiers.ItemInformations;
-import fr.soraxdubbing.itemmodifiers.ItemModifiers;
-import org.bukkit.Color;
-import org.bukkit.attribute.AttributeModifier;
+import fr.soraxdubbing.itemmodifiers.SAOStats;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -90,18 +83,18 @@ public class CustomiserCommand implements CommandExecutor {
 
 
     public static void SetLores(ItemStack item){
-        ItemModifiers.getInstance().getLogger().info("SetLores");
+        SAOStats.getInstance().getLogger().info("SetLores");
         NBTItem nbtItem = new NBTItem(item);
         ItemInformations itemInformations = nbtItem.getObject("ItemInformations",ItemInformations.class);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§r§8§l[ §r" + itemInformations.getName() + "§r§8§l ]");
 
-        ItemModifiers.getInstance().getLogger().info("Description : " + itemInformations.getDescription());
+        SAOStats.getInstance().getLogger().info("Description : " + itemInformations.getDescription());
         List<String> lores = new ArrayList<>();
         lores.add("§8§m==========§r§8[§r§2 Desc §8]§m==========");
         lores.add("§2" + itemInformations.getDescription());
 
-        ItemModifiers.getInstance().getLogger().info("Attributes");
+        SAOStats.getInstance().getLogger().info("Attributes");
         if (!itemInformations.intAttributesIsEmpty() || !itemInformations.doubleAttributesIsEmpty()){
             lores.add("§8§m==========§r§8[§r§2 Attributs §8]§m==========");
             if(itemInformations.hasDoubleAttribute("damage.min") && itemInformations.hasDoubleAttribute("damage.max")){
@@ -116,7 +109,7 @@ public class CustomiserCommand implements CommandExecutor {
             }
         }
 
-        ItemModifiers.getInstance().getLogger().info("Buff");
+        SAOStats.getInstance().getLogger().info("Buff");
         if(!itemInformations.potionsIsEmpty()){
             lores.add("§8§m==========§r§8[§r§2 Buff §8]§m==========");
             itemInformations.getPotions().forEach((potionType, integer) -> {
@@ -124,7 +117,7 @@ public class CustomiserCommand implements CommandExecutor {
             });
         }
 
-        ItemModifiers.getInstance().getLogger().info("SetLore");
+        SAOStats.getInstance().getLogger().info("SetLore");
         meta.setLore(lores);
         item.setItemMeta(meta);
     }

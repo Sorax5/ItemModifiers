@@ -1,8 +1,8 @@
-package fr.soraxdubbing.itemmodifiers.commands;
+package fr.soraxdubbing.saostats.commands;
 
 import de.tr7zw.nbtapi.NBTItem;
-import fr.soraxdubbing.itemmodifiers.ItemInformations;
-import fr.soraxdubbing.itemmodifiers.SAOStats;
+import fr.soraxdubbing.saostats.ItemInformations;
+import fr.soraxdubbing.saostats.SAOStats;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

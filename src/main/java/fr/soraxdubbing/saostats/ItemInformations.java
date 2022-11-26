@@ -1,4 +1,4 @@
-package fr.soraxdubbing.itemmodifiers;
+package fr.soraxdubbing.saostats;
 
 import org.bukkit.potion.PotionType;
 

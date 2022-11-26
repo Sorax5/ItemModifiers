@@ -1,4 +1,4 @@
-package fr.soraxdubbing.itemmodifiers;
+package fr.soraxdubbing.saostats;
 
 import de.tr7zw.nbtapi.NBTItem;
 import org.bukkit.Bukkit;

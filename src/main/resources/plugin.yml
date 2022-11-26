@@ -1,9 +1,9 @@
-name: ItemModifiers
+name: SAOStats
 version: '${project.version}'
-main: fr.soraxdubbing.itemmodifiers.ItemModifiers
+main: fr.soraxdubbing.saostats.SAOStats
 api-version: 1.16
-authors: [ SoraxDUbbing ]
-description: Plugin de modification d'items
+authors: [ SoraxDubbing ]
+description: Plugin de modification d'items pour le serveur SAOFrance
 depend: [NBTAPI]
 commands:
   customise:

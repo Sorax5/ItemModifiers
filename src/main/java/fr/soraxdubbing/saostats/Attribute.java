@@ -1,4 +1,4 @@
-package fr.soraxdubbing.itemmodifiers;
+package fr.soraxdubbing.saostats;
 
 public class Attribute {
     private String name;

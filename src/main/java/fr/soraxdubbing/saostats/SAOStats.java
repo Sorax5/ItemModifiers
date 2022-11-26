@@ -1,7 +1,7 @@
-package fr.soraxdubbing.itemmodifiers;
+package fr.soraxdubbing.saostats;
 
 import de.tr7zw.nbtapi.NBTItem;
-import fr.soraxdubbing.itemmodifiers.commands.CustomiserCommand;
+import fr.soraxdubbing.saostats.commands.CustomiserCommand;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;

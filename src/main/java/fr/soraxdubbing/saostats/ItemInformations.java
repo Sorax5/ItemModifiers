@@ -2,11 +2,11 @@ package fr.soraxdubbing.saostats;
 
 import org.bukkit.potion.PotionType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ItemInformations {
-    private String name;
-    private String description;
     private HashMap<PotionType,Integer> potions;
     private HashMap<String,Double> doubleAttributes;
     private HashMap<String,Integer> intAttributes;
@@ -15,8 +15,6 @@ public class ItemInformations {
         this.potions = new HashMap<>();
         this.doubleAttributes = new HashMap<>();
         this.intAttributes = new HashMap<>();
-        this.name = "";
-        this.description = "";
     }
 
     public void addDoubleAttribute(String name, double value){
@@ -51,22 +49,6 @@ public class ItemInformations {
         return intAttributes.get(name);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public boolean doubleAttributesIsEmpty(){
         return doubleAttributes.isEmpty();
     }
@@ -85,5 +67,13 @@ public class ItemInformations {
 
     public void addPotion(PotionType potionType, int level){
         potions.put(potionType,level);
+    }
+
+    public void removePotion(PotionType potionType){
+        potions.remove(potionType);
+    }
+
+    public boolean hasPotion(PotionType potionType){
+        return potions.containsKey(potionType);
     }
 }

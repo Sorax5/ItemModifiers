@@ -1,16 +1,29 @@
 package fr.soraxdubbing.saostats;
 
+import app.ashcon.intake.bukkit.BukkitIntake;
+import app.ashcon.intake.bukkit.graph.BasicBukkitCommandGraph;
+import app.ashcon.intake.fluent.AbstractDispatcherNode;
+import app.ashcon.intake.fluent.DispatcherNode;
+import app.ashcon.intake.parametric.Injector;
+import app.ashcon.intake.parametric.ParametricBuilder;
+import com.sk89q.intake.ImmutableParameter;
+import com.sk89q.intake.parametric.ArgumentParser;
 import de.tr7zw.nbtapi.NBTItem;
-import fr.soraxdubbing.saostats.commands.CustomiserCommand;
+import fr.soraxdubbing.saostats.commands.*;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionType;
 
 public final class SAOStats extends JavaPlugin implements Listener {
 
@@ -43,6 +56,11 @@ public final class SAOStats extends JavaPlugin implements Listener {
             LivingEntity livingEntity = (LivingEntity) damager;
 
             ItemStack item = livingEntity.getEquipment().getItemInMainHand();
+
+            if(item.getType().isAir()){
+                return;
+            }
+
             NBTItem nbtItem = new NBTItem(item);
 
             if(nbtItem.hasKey("ItemInformations")){
@@ -77,24 +95,91 @@ public final class SAOStats extends JavaPlugin implements Listener {
                         itemInformations.addIntAttribute("durability.actual",actuel);
                         nbtItem.setObject("ItemInformations",itemInformations);
                         item = nbtItem.getItem();
-                        CustomiserCommand.SetLores(item);
                         livingEntity.getEquipment().setItemInMainHand(item);
                     }else{
                         livingEntity.getEquipment().setItemInMainHand(null);
                     }
                 }
-
-
             }
         }
 
         if(damaged instanceof LivingEntity){
             LivingEntity livingEntity = (LivingEntity) damaged;
-            ItemStack item = livingEntity.getEquipment().getItemInMainHand();
+            ItemStack[] armors = livingEntity.getEquipment().getArmorContents();
+
+            if (armors != null){
+                for (ItemStack armor : armors) {
+
+                    if(armor == null) continue;
+                    if(armor.getType().isAir()) continue;
+                    NBTItem nbt = new NBTItem(armor);
+
+                    if(nbt.hasKey("ItemInformations")) {
+                        ItemInformations itemInformations = nbt.getObject("ItemInformations", ItemInformations.class);
+
+                        if(itemInformations.hasDoubleAttribute("defense")){
+                            double defense = itemInformations.getDoubleAttribute("defense");
+                            damage -= (damage*defense);
+                            if(damage < 0) damage = 0D;
+                        }
+                    }
+                }
+            }
         }
 
         event.setDamage(damage);
+    }
 
+    @EventHandler
+    public void zdzdd(EntityDamageEvent event){
+        Entity damaged = event.getEntity();
+        double damage = event.getDamage();
+
+        if(damaged instanceof LivingEntity){
+            LivingEntity livingEntity = (LivingEntity) damaged;
+            ItemStack[] armors = livingEntity.getEquipment().getArmorContents();
+
+            if (armors != null){
+                for (ItemStack armor : armors) {
+
+                    if(armor == null) continue;
+                    if(armor.getType().isAir()) continue;
+                    NBTItem nbt = new NBTItem(armor);
+
+                    if(nbt.hasKey("ItemInformations")) {
+                        ItemInformations itemInformations = nbt.getObject("ItemInformations", ItemInformations.class);
+
+                        if(itemInformations.hasDoubleAttribute("defense")){
+                            double defense = itemInformations.getDoubleAttribute("defense");
+                            damage -= (damage*defense);
+                            if(damage < 0) damage = 0D;
+                        }
+                    }
+                }
+            }
+        }
+
+        event.setDamage(damage);
+    }
+
+    @Override
+    public void onLoad() {
+        BasicBukkitCommandGraph cmdGraph = new BasicBukkitCommandGraph();
+
+        DispatcherNode loreNode = cmdGraph.getRootDispatcherNode().registerNode("lore");
+        loreNode.registerCommands(new LoreCommand());
+
+        DispatcherNode attributeNode = cmdGraph.getRootDispatcherNode().registerNode("SAOStats");
+        attributeNode.registerNode("damage").registerCommands(new DamageCommand());
+        attributeNode.registerNode("critic").registerCommands(new CriticCommand());
+        attributeNode.registerNode("durability").registerCommands(new DurabilityCommand());
+        attributeNode.registerCommands(new DefenseCommand());
+        attributeNode.registerNode("potion").registerCommands(new PotionCommand());
+        attributeNode.registerNode("enchant").registerCommands(new EnchantCommand());
+
+        BukkitIntake bukkitIntake = new BukkitIntake(this, cmdGraph);
+
+        bukkitIntake.register();
     }
 
     public static SAOStats getInstance() {

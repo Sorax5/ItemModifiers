@@ -1,13 +1,20 @@
 package fr.soraxdubbing.saostats.commands;
 
 import app.ashcon.intake.Command;
+import app.ashcon.intake.CommandException;
+import app.ashcon.intake.argument.Namespace;
 import app.ashcon.intake.bukkit.parametric.annotation.Sender;
+import app.ashcon.intake.completion.CommandCompleter;
 import de.tr7zw.nbtapi.NBTItem;
 import fr.soraxdubbing.saostats.ItemInformations;
+import fr.soraxdubbing.saostats.SAOStats;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class CriticCommand {
+import java.util.ArrayList;
+import java.util.List;
+
+public class CriticCommand implements CommandCompleter {
 
     @Command(
             aliases = "damage",
@@ -59,5 +66,15 @@ public class CriticCommand {
         nbtItem.setObject("ItemInformations", itemInformations);
         nbtItem.getItem();
         player.getInventory().setItemInMainHand(nbtItem.getItem());
+    }
+
+    @Override
+    public List<String> getSuggestions(String s, Namespace namespace) throws CommandException {
+        SAOStats.getInstance().getLogger().info(s);
+        SAOStats.getInstance().getLogger().info(namespace.toString());
+        List<String> suggestions = new ArrayList<>();
+        suggestions.add("damage");
+        suggestions.add("chance");
+        return suggestions;
     }
 }

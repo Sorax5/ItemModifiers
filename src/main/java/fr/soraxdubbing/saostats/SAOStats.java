@@ -1,20 +1,16 @@
 package fr.soraxdubbing.saostats;
 
+import app.ashcon.intake.Intake;
 import app.ashcon.intake.bukkit.BukkitIntake;
 import app.ashcon.intake.bukkit.graph.BasicBukkitCommandGraph;
-import app.ashcon.intake.fluent.AbstractDispatcherNode;
 import app.ashcon.intake.fluent.DispatcherNode;
 import app.ashcon.intake.parametric.Injector;
-import app.ashcon.intake.parametric.ParametricBuilder;
-import com.sk89q.intake.ImmutableParameter;
-import com.sk89q.intake.parametric.ArgumentParser;
 import de.tr7zw.nbtapi.NBTItem;
 import fr.soraxdubbing.saostats.commands.*;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
+import fr.soraxdubbing.saostats.module.SpigotModule;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -33,7 +29,6 @@ public final class SAOStats extends JavaPlugin implements Listener {
     public void onEnable() {
         // Plugin startup logic
         instance = this;
-        getCommand("customise").setExecutor(new CustomiserCommand());
         getServer().getPluginManager().registerEvents(this, this);
         PotionThread potionThread = new PotionThread();
         potionThread.runTaskTimer(this,0,10);
@@ -79,8 +74,7 @@ public final class SAOStats extends JavaPlugin implements Listener {
 
                     if(Math.random() < chances){
                         damage *= damages;
-                        Component message = Component.text("§cCritical hit !");
-                        livingEntity.sendActionBar(message);
+                        damager.spigot().sendMessage(new TextComponent("§c§lCRITIC !"));
 
                         Location location = damaged.getLocation();
                         livingEntity.getWorld().spawnParticle(org.bukkit.Particle.CRIT, location, 10);
@@ -164,6 +158,9 @@ public final class SAOStats extends JavaPlugin implements Listener {
 
     @Override
     public void onLoad() {
+        Injector injector = Intake.createInjector();
+        injector.install(new SpigotModule());
+
         BasicBukkitCommandGraph cmdGraph = new BasicBukkitCommandGraph();
 
         DispatcherNode loreNode = cmdGraph.getRootDispatcherNode().registerNode("lore");
@@ -178,7 +175,6 @@ public final class SAOStats extends JavaPlugin implements Listener {
         attributeNode.registerNode("enchant").registerCommands(new EnchantCommand());
 
         BukkitIntake bukkitIntake = new BukkitIntake(this, cmdGraph);
-
         bukkitIntake.register();
     }
 

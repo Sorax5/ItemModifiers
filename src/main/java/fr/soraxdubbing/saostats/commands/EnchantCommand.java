@@ -16,7 +16,7 @@ public class EnchantCommand {
             perms = "SAOStats.enchant.add",
             usage = "[enchants] [level]"
     )
-    public void defense(@Sender Player player, String enchantment, Integer level) {
+    public void add(@Sender Player player, String enchantment, Integer level) {
         ItemStack item = player.getInventory().getItemInMainHand();
 
         if (item.getType().isAir()) {

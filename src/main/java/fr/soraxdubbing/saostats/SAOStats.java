@@ -143,9 +143,9 @@ public final class SAOStats extends JavaPlugin implements Listener {
                     if(nbt.hasKey("ItemInformations")) {
                         ItemInformations itemInformations = nbt.getObject("ItemInformations", ItemInformations.class);
 
-                        if(itemInformations.hasDoubleAttribute("defense")){
-                            double defense = itemInformations.getDoubleAttribute("defense");
-                            damage -= (damage*defense);
+                        if(itemInformations.hasIntAttribute("defense")){
+                            int defense = itemInformations.getIntAttribute("defense");
+                            damage -= defense;
                             if(damage < 0) damage = 0D;
                         }
                     }

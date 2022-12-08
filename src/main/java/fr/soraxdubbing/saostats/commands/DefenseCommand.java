@@ -15,7 +15,7 @@ public class DefenseCommand {
             perms = "SAOStats.defense",
             usage = "[defense]"
     )
-    public void defense(@Sender Player player, Double defense) {
+    public void defense(@Sender Player player, int defense) {
         ItemStack item = player.getInventory().getItemInMainHand();
 
         if (item.getType().isAir()) {
@@ -33,7 +33,7 @@ public class DefenseCommand {
         if(itemInformations.hasDoubleAttribute("defense")){
             itemInformations.removeDoubleAttribute("defense");
         }
-        itemInformations.addDoubleAttribute("defense", defense);
+        itemInformations.addIntAttribute("defense", defense);
         player.sendMessage("§aLa défense de l'item a été définie à " + defense);
 
         nbtItem.setObject("ItemInformations", itemInformations);

@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CriticCommand implements CommandCompleter {
+public class CriticCommand {
 
     @Command(
             aliases = "damage",
@@ -66,15 +66,5 @@ public class CriticCommand implements CommandCompleter {
         nbtItem.setObject("ItemInformations", itemInformations);
         nbtItem.getItem();
         player.getInventory().setItemInMainHand(nbtItem.getItem());
-    }
-
-    @Override
-    public List<String> getSuggestions(String s, Namespace namespace) throws CommandException {
-        SAOStats.getInstance().getLogger().info(s);
-        SAOStats.getInstance().getLogger().info(namespace.toString());
-        List<String> suggestions = new ArrayList<>();
-        suggestions.add("damage");
-        suggestions.add("chance");
-        return suggestions;
     }
 }

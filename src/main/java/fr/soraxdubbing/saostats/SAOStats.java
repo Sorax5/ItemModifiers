@@ -113,6 +113,26 @@ public final class SAOStats extends JavaPlugin implements Listener {
                     if(nbt.hasKey("ItemInformations")) {
                         ItemInformations itemInformations = nbt.getObject("ItemInformations", ItemInformations.class);
 
+                        if(itemInformations.hasIntAttribute("durability.actual")){
+                            int actuel = itemInformations.getIntAttribute("durability.actual");
+
+                            if(actuel > 0){
+                                actuel--;
+                                itemInformations.addIntAttribute("durability.actual",actuel);
+                                nbt.setObject("ItemInformations",itemInformations);
+                                armor = nbt.getItem();
+                                DurabilityCommand.updateDurabilityLore(armor);
+                                livingEntity.getEquipment().setArmorContents(armors);
+                                if(actuel == 0){
+                                    Location location = livingEntity.getLocation();
+                                    livingEntity.getWorld().spawnParticle(org.bukkit.Particle.BLOCK_CRACK,location,10,0.5,0.5,0.5,0.5,location.getBlock().getBlockData());
+                                    livingEntity.getWorld().playSound(location,"minecraft:block.anvil.land",1,1);
+                                }
+                            }else{
+                                event.setCancelled(true);
+                            }
+                        }
+
                         if(itemInformations.hasDoubleAttribute("defense")){
                             double defense = itemInformations.getDoubleAttribute("defense");
                             damage -= (damage*defense);
@@ -144,6 +164,26 @@ public final class SAOStats extends JavaPlugin implements Listener {
 
                     if(nbt.hasKey("ItemInformations")) {
                         ItemInformations itemInformations = nbt.getObject("ItemInformations", ItemInformations.class);
+
+                        if(itemInformations.hasIntAttribute("durability.actual")){
+                            int actuel = itemInformations.getIntAttribute("durability.actual");
+
+                            if(actuel > 0){
+                                actuel--;
+                                itemInformations.addIntAttribute("durability.actual",actuel);
+                                nbt.setObject("ItemInformations",itemInformations);
+                                armor = nbt.getItem();
+                                DurabilityCommand.updateDurabilityLore(armor);
+                                livingEntity.getEquipment().setArmorContents(armors);
+                                if(actuel == 0){
+                                    Location location = livingEntity.getLocation();
+                                    livingEntity.getWorld().spawnParticle(org.bukkit.Particle.BLOCK_CRACK,location,10,0.5,0.5,0.5,0.5,location.getBlock().getBlockData());
+                                    livingEntity.getWorld().playSound(location,"minecraft:block.anvil.land",1,1);
+                                }
+                            }else{
+                                event.setCancelled(true);
+                            }
+                        }
 
                         if(itemInformations.hasIntAttribute("defense")){
                             int defense = itemInformations.getIntAttribute("defense");

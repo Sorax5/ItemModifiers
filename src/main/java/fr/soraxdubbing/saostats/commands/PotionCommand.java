@@ -16,7 +16,7 @@ public class PotionCommand {
             perms = "SAOStats.potion.add",
             usage = "[potion] [level]"
     )
-    public void add(@Sender Player player, String potionType, int level) {
+    public void add(@Sender Player player, PotionType potionType, int level) {
         ItemStack item = player.getInventory().getItemInMainHand();
 
         if (item.getType().isAir()) {
@@ -32,9 +32,9 @@ public class PotionCommand {
         }
 
         try{
-            PotionType potion = PotionType.valueOf(potionType.toUpperCase());
-            itemInformations.addPotion(potion, level);
-            player.sendMessage("§aL'effet §e" + potion + "§a a été ajouté à l'item !");
+            //PotionType potion = PotionType.valueOf(potionType.toUpperCase());
+            itemInformations.addPotion(potionType, level);
+            player.sendMessage("§aL'effet §e" + potionType.name() + "§a a été ajouté à l'item !");
         }
         catch (IllegalArgumentException e){
             player.sendMessage("§cL'effet §e" + potionType + "§c n'existe pas !");

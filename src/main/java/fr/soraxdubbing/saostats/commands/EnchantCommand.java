@@ -14,9 +14,9 @@ public class EnchantCommand {
             aliases = "add",
             desc = "Add an enchantment to the item in your hand",
             perms = "SAOStats.enchant.add",
-            usage = "[enchants] [level]"
+            usage = "[enchant] [level]"
     )
-    public void add(@Sender Player player, String enchantment, Integer level) {
+    public void add(@Sender Player player, Enchantment enchant, Integer level) {
         ItemStack item = player.getInventory().getItemInMainHand();
 
         if (item.getType().isAir()) {
@@ -25,13 +25,10 @@ public class EnchantCommand {
         }
 
         ItemMeta itemMeta = item.getItemMeta();
-        try{
-            itemMeta.addEnchant(Enchantment.getByName(enchantment),level,true);
-            player.sendMessage("§aL'enchante a été ajouté à l'item !");
-        }
-        catch (Exception e){
-            player.sendMessage("§cL'enchante n'existe pas !");
-        }
+
+        itemMeta.addEnchant(enchant,level,true);
+        player.sendMessage("§aL'enchante a été ajouté à l'item !");
+
         item.setItemMeta(itemMeta);
     }
 }

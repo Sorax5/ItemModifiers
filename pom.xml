@@ -6,7 +6,7 @@
 
     <groupId>fr.soraxdubbing</groupId>
     <artifactId>SAOStats</artifactId>
-    <version>1.0</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 
     <name>SAOStats</name>
@@ -70,6 +70,10 @@
         <repository>
             <id>ashcon.app</id>
             <url>https://repo.ashcon.app/nexus/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>maven.enginehub.org</id>
+            <url>https://maven.enginehub.org/repo/</url>
         </repository>
     </repositories>
 

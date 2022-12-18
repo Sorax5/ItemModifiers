@@ -1,14 +1,11 @@
 package fr.soraxdubbing.saostats;
 
-import app.ashcon.intake.Intake;
 import app.ashcon.intake.bukkit.BukkitIntake;
 import app.ashcon.intake.bukkit.graph.BasicBukkitCommandGraph;
 import app.ashcon.intake.fluent.DispatcherNode;
-import app.ashcon.intake.parametric.Injector;
 import de.tr7zw.nbtapi.NBTItem;
 import fr.soraxdubbing.saostats.commands.*;
-import fr.soraxdubbing.saostats.module.SpigotModule;
-import net.md_5.bungee.api.ChatMessageType;
+import fr.soraxdubbing.saostats.module.MoreModule;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -19,7 +16,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionType;
 
 public final class SAOStats extends JavaPlugin implements Listener {
 
@@ -61,6 +57,26 @@ public final class SAOStats extends JavaPlugin implements Listener {
             if(nbtItem.hasKey("ItemInformations")){
                 ItemInformations itemInformations = nbtItem.getObject("ItemInformations",ItemInformations.class);
 
+                if(itemInformations.hasIntAttribute("durability.actual")){
+                    int actuel = itemInformations.getIntAttribute("durability.actual");
+
+                    if(actuel > 0){
+                        actuel--;
+                        itemInformations.addIntAttribute("durability.actual",actuel);
+                        nbtItem.setObject("ItemInformations",itemInformations);
+                        item = nbtItem.getItem();
+                        DurabilityCommand.updateDurabilityLore(item);
+                        livingEntity.getEquipment().setItemInMainHand(item);
+                        if(actuel == 0){
+                            Location location = livingEntity.getLocation();
+                            livingEntity.getWorld().spawnParticle(org.bukkit.Particle.BLOCK_CRACK,location,10,0.5,0.5,0.5,0.5,location.getBlock().getBlockData());
+                            livingEntity.getWorld().playSound(location,"minecraft:block.anvil.land",1,1);
+                        }
+                    }else{
+                        event.setCancelled(true);
+                    }
+                }
+
                 if(itemInformations.hasDoubleAttribute("damage.max") && itemInformations.hasDoubleAttribute("damage.min")){
                     double max = itemInformations.getDoubleAttribute("damage.max");
                     double min = itemInformations.getDoubleAttribute("damage.min");
@@ -78,20 +94,6 @@ public final class SAOStats extends JavaPlugin implements Listener {
 
                         Location location = damaged.getLocation();
                         livingEntity.getWorld().spawnParticle(org.bukkit.Particle.CRIT, location, 10);
-                    }
-                }
-
-                if(itemInformations.hasIntAttribute("durability.actual")){
-                    int actuel = itemInformations.getIntAttribute("durability.actual");
-
-                    if(actuel > 0){
-                        actuel--;
-                        itemInformations.addIntAttribute("durability.actual",actuel);
-                        nbtItem.setObject("ItemInformations",itemInformations);
-                        item = nbtItem.getItem();
-                        livingEntity.getEquipment().setItemInMainHand(item);
-                    }else{
-                        livingEntity.getEquipment().setItemInMainHand(null);
                     }
                 }
             }
@@ -125,7 +127,7 @@ public final class SAOStats extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void zdzdd(EntityDamageEvent event){
+    public void DamageHandlerEvent(EntityDamageEvent event){
         Entity damaged = event.getEntity();
         double damage = event.getDamage();
 
@@ -158,10 +160,9 @@ public final class SAOStats extends JavaPlugin implements Listener {
 
     @Override
     public void onLoad() {
-        Injector injector = Intake.createInjector();
-        injector.install(new SpigotModule());
-
         BasicBukkitCommandGraph cmdGraph = new BasicBukkitCommandGraph();
+
+        cmdGraph.getBuilder().getInjector().install(new MoreModule());
 
         DispatcherNode loreNode = cmdGraph.getRootDispatcherNode().registerNode("lore");
         loreNode.registerCommands(new LoreCommand());

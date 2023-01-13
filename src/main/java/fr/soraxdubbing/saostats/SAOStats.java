@@ -72,6 +72,7 @@ public final class SAOStats extends JavaPlugin implements Listener {
                                 livingEntity.getWorld().playSound(location,"minecraft:block.anvil.land",1,1);
                             }
                         }else{
+                            // Dans le cas ou l'objet est cassé et dans la main du joueur on annule les dégats
                             event.setCancelled(true);
                         }
                     }

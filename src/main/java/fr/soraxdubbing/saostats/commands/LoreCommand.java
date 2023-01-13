@@ -2,6 +2,7 @@ package fr.soraxdubbing.saostats.commands;
 
 import app.ashcon.intake.Command;
 import app.ashcon.intake.bukkit.parametric.annotation.Sender;
+import app.ashcon.intake.parametric.annotation.Text;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,7 +18,7 @@ public class LoreCommand {
             perms = "SAOStats.lore.set",
             usage = "[line] [lore]"
     )
-    public void set(@Sender Player player, int a, String b) {
+    public void set(@Sender Player player, int a, @Text String b) {
         ItemStack item = player.getInventory().getItemInMainHand();
         ItemMeta itemMeta = item.getItemMeta();
 
@@ -44,7 +45,7 @@ public class LoreCommand {
             perms = "SAOStats.lore.add",
             usage = "[lore]"
     )
-    public void add(@Sender Player player, String b) {
+    public void add(@Sender Player player, @Text String b) {
         ItemStack item = player.getInventory().getItemInMainHand();
         ItemMeta itemMeta = item.getItemMeta();
 

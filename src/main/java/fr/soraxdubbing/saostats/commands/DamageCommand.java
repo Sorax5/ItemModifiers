@@ -73,4 +73,37 @@ public class DamageCommand {
         nbtItem.getItem();
         player.getInventory().setItemInMainHand(nbtItem.getItem());
     }
+
+    @Command(
+            aliases = "set",
+            desc = "Set the damage of an item",
+            perms = "SAOStats.damage.set",
+            usage = "[set] [value]"
+    )
+    public void set(@Sender Player player, Double set) {
+        ItemStack item = player.getInventory().getItemInMainHand();
+
+        if (item.getType().isAir()) {
+            player.sendMessage("§cVous devez tenir un item en main !");
+            return;
+        }
+
+        NBTItem nbtItem = new NBTItem(item);
+
+        ItemInformations itemInformations = new ItemInformations();
+        if(nbtItem.hasKey("ItemInformations")){
+            itemInformations = nbtItem.getObject("ItemInformations", ItemInformations.class);
+        }
+
+        if(itemInformations.hasDoubleAttribute("damage.set")){
+            itemInformations.removeDoubleAttribute("damage.set");
+        }
+
+        itemInformations.addDoubleAttribute("damage.set", set);
+        player.sendMessage("§aVous avez défini les dégâts de l'item en main à " + set);
+
+        nbtItem.setObject("ItemInformations", itemInformations);
+        nbtItem.getItem();
+        player.getInventory().setItemInMainHand(nbtItem.getItem());
+    }
 }

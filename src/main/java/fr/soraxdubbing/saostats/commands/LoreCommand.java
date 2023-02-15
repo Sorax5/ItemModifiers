@@ -2,6 +2,7 @@ package fr.soraxdubbing.saostats.commands;
 
 import app.ashcon.intake.Command;
 import app.ashcon.intake.bukkit.parametric.annotation.Sender;
+import app.ashcon.intake.parametric.annotation.Text;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,7 +18,7 @@ public class LoreCommand {
             perms = "SAOStats.lore.set",
             usage = "[line] [lore]"
     )
-    public void set(@Sender Player player, int a, String b) {
+    public void set(@Sender Player player, int a, @Text String b) {
         ItemStack item = player.getInventory().getItemInMainHand();
         ItemMeta itemMeta = item.getItemMeta();
 
@@ -26,16 +27,21 @@ public class LoreCommand {
             lore = new ArrayList<>();
         }
 
+        if (b.contains("&")) {
+            b = b.replaceAll("&", "§");
+        }
+
         try{
-            lore.set(a,b);
+            lore.set(a-1,b);
         }
         catch (IndexOutOfBoundsException e){
             lore.add(b);
         }
-        player.sendMessage("§aLa ligne " + a + " a été définie à " + b);
+        player.sendMessage("§aLa ligne " + a + " a été définie comme: " + b);
 
         itemMeta.setLore(lore);
         item.setItemMeta(itemMeta);
+        player.getInventory().setItemInMainHand(item);
     }
 
     @Command(
@@ -44,7 +50,7 @@ public class LoreCommand {
             perms = "SAOStats.lore.add",
             usage = "[lore]"
     )
-    public void add(@Sender Player player, String b) {
+    public void add(@Sender Player player, @Text String b) {
         ItemStack item = player.getInventory().getItemInMainHand();
         ItemMeta itemMeta = item.getItemMeta();
 
@@ -52,11 +58,15 @@ public class LoreCommand {
         if (lore == null) {
             lore = new ArrayList<>();
         }
+        if (b.contains("&")) {
+            b = b.replaceAll("&", "§");
+        }
         lore.add(b);
-        player.sendMessage("§a La ligne " + b + " a été ajoutée");
+        player.sendMessage("§aLa ligne " + b + "§a a été ajoutée");
 
         itemMeta.setLore(lore);
         item.setItemMeta(itemMeta);
+        player.getInventory().setItemInMainHand(item);
     }
 
     @Command(
@@ -81,7 +91,7 @@ public class LoreCommand {
         }
 
         try{
-            lore.remove(b);
+            lore.remove(b-1);
             player.sendMessage("§aLa ligne " + b + " a été supprimée");
         }
         catch (IndexOutOfBoundsException e){
@@ -90,6 +100,7 @@ public class LoreCommand {
 
         itemMeta.setLore(lore);
         item.setItemMeta(itemMeta);
+        player.getInventory().setItemInMainHand(item);
     }
 
     @Command(
@@ -111,5 +122,6 @@ public class LoreCommand {
         itemMeta.setLore(new ArrayList<>());
         player.sendMessage("§aLe lore a été supprimée");
         item.setItemMeta(itemMeta);
+        player.getInventory().setItemInMainHand(item);
     }
 }

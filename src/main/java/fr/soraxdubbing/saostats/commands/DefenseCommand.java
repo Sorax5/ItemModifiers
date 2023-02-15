@@ -13,7 +13,7 @@ public class DefenseCommand {
             aliases = "defense",
             desc = "Set the defense of the item in your hand",
             perms = "SAOStats.defense",
-            usage = "[defense]"
+            usage = "[defense] [value]"
     )
     public void defense(@Sender Player player, int defense) {
         ItemStack item = player.getInventory().getItemInMainHand();
@@ -39,5 +39,6 @@ public class DefenseCommand {
         nbtItem.setObject("ItemInformations", itemInformations);
         nbtItem.getItem();
         player.getInventory().setItemInMainHand(nbtItem.getItem());
+
     }
 }

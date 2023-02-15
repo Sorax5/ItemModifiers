@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class DurabilityCommand {
@@ -19,7 +18,7 @@ public class DurabilityCommand {
             aliases = "max",
             desc = "Définir la durabilité maximale de l'item",
             perms = "SAOStats.durability.max",
-            usage = "[max]"
+            usage = "[max] [value]"
     )
     public void max(@Sender Player player, int max) {
         ItemStack item = player.getInventory().getItemInMainHand();
@@ -66,7 +65,7 @@ public class DurabilityCommand {
             aliases = "actual",
             desc = "Définir la durabilité actuelle de l'item",
             perms = "SAOStats.durability.actual",
-            usage = "[actual]"
+            usage = "[actual] [value]"
     )
     public void actual(@Sender Player player, int actual) {
         ItemStack item = player.getInventory().getItemInMainHand();
@@ -108,7 +107,7 @@ public class DurabilityCommand {
             aliases = "repaire",
             desc = "permet de réparer l'item",
             perms = "SAOStats.durability.repare",
-            usage = ""
+            usage = "[value]"
     )
     public void repaire(@Sender Player player, @Maybe Integer amount) {
         ItemStack item = player.getInventory().getItemInMainHand();

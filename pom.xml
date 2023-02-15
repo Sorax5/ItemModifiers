@@ -6,7 +6,7 @@
 
     <groupId>fr.soraxdubbing</groupId>
     <artifactId>SAOStats</artifactId>
-    <version>1.2</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>SAOStats</name>
@@ -55,6 +55,10 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
@@ -66,10 +70,6 @@
         <repository>
             <id>spigot-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>ashcon.app</id>
-            <url>https://repo.ashcon.app/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
             <id>maven.enginehub.org</id>
@@ -91,9 +91,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>app.ashcon.intake</groupId>
-            <artifactId>intake-bukkit</artifactId>
-            <version>1.3-SNAPSHOT</version>
+            <groupId>com.github.Electroid</groupId>
+            <artifactId>intake</artifactId>
+            <version>491a0c520fd2c0c0caabaeef90d64e3b65f270dd</version>
         </dependency>
     </dependencies>
 </project>

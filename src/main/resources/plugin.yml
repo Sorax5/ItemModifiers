@@ -8,7 +8,7 @@ depend: [NBTAPI]
 commands:
   customise:
     description: Permet de customiser un item
-    usage: /customise <item> <type> <value>
-    aliases: [custom]
-    permission: itemmodifiers.customise
+    usage: /saosstats <item> <type> <value>
+    aliases: [saostats]
+    permission: saosstats.modify
     permission-message: "&cVous n'avez pas la permission d'utiliser cette commande"

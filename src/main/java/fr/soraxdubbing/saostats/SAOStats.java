@@ -17,9 +17,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public final class SAOStats extends JavaPlugin implements Listener {
 
     private static SAOStats instance;
@@ -71,8 +68,6 @@ public final class SAOStats extends JavaPlugin implements Listener {
                                 livingEntity.getWorld().spawnParticle(org.bukkit.Particle.BLOCK_CRACK,location,10,0.5,0.5,0.5,0.5,location.getBlock().getBlockData());
                                 livingEntity.getWorld().playSound(location,"minecraft:block.anvil.land",1,1);
                             }
-                        }else{
-                            event.setCancelled(true);
                         }
                     }
 
@@ -81,6 +76,10 @@ public final class SAOStats extends JavaPlugin implements Listener {
                         double min = itemInformations.getDoubleAttribute("damage.min");
 
                         damage = Math.random() * (max - min) + min;
+                    }
+                    if (itemInformations.hasDoubleAttribute("damage.set")) {
+                        double set = itemInformations.getDoubleAttribute("damage.set");
+                        damage = set;
                     }
 
                     if(itemInformations.hasDoubleAttribute("critic.chance") && itemInformations.hasDoubleAttribute("critic.damage")){
@@ -196,17 +195,17 @@ public final class SAOStats extends JavaPlugin implements Listener {
 
         cmdGraph.getBuilder().getInjector().install(new MoreModule());
 
-        DispatcherNode loreNode = cmdGraph.getRootDispatcherNode().registerNode("lore");
-        loreNode.registerCommands(new LoreCommand());
-
-        DispatcherNode attributeNode = cmdGraph.getRootDispatcherNode().registerNode("SAOStats");
-        attributeNode.registerNode("damage").registerCommands(new DamageCommand());
-        attributeNode.registerNode("critic").registerCommands(new CriticCommand());
-        attributeNode.registerNode("durability").registerCommands(new DurabilityCommand());
-        attributeNode.registerCommands(new DefenseCommand());
-        attributeNode.registerNode("potion").registerCommands(new PotionCommand());
-        attributeNode.registerNode("enchant").registerCommands(new EnchantCommand());
-        attributeNode.registerNode("attribute").registerCommands(new AttributesCommands());
+        DispatcherNode cmd = cmdGraph.getRootDispatcherNode().registerNode("SAOStats");
+        cmd.registerNode("damage").registerCommands(new DamageCommand());
+        cmd.registerNode("critic").registerCommands(new CriticCommand());
+        cmd.registerNode("durability").registerCommands(new DurabilityCommand());
+        cmd.registerCommands(new DefenseCommand());
+        cmd.registerNode("health").registerCommands(new HealthCommand());
+        cmd.registerNode("name").registerCommands(new NameCommand());
+        cmd.registerNode("lore").registerCommands(new LoreCommand());
+        cmd.registerNode("potion").registerCommands(new PotionCommand());
+        cmd.registerNode("enchant").registerCommands(new EnchantCommand());
+        cmd.registerNode("attribute").registerCommands(new AttributesCommands());
 
         BukkitIntake bukkitIntake = new BukkitIntake(this, cmdGraph);
         bukkitIntake.register();

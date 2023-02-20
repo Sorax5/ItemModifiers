@@ -13,7 +13,7 @@ public class DamageCommand {
     @Command(
             aliases = "max",
             desc = "Set the max damage of an item",
-            perms = "SAOStats.damage.max",
+            perms = "SAOStats.stats.damage.max",
             usage = "[max]"
     )
     public void max(@Sender Player player, @Hand ItemStack item, Double max) {
@@ -38,7 +38,7 @@ public class DamageCommand {
     @Command(
             aliases = "min",
             desc = "Set the min damage of an item",
-            perms = "SAOStats.damage.min",
+            perms = "SAOStats.stats.damage.min",
             usage = "[min]"
     )
     public void min(@Sender Player player, @Hand ItemStack item, Double min) {

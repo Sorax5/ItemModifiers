@@ -19,7 +19,7 @@ public class DurabilityCommand {
     @Command(
             aliases = "max",
             desc = "Définir la durabilité maximale de l'item",
-            perms = "SAOStats.durability.max",
+            perms = "SAOStats.stats.durability.max",
             usage = "[max]"
     )
     public void max(@Sender Player player, @Hand ItemStack item, int max) {
@@ -59,7 +59,7 @@ public class DurabilityCommand {
     @Command(
             aliases = "actual",
             desc = "Définir la durabilité actuelle de l'item",
-            perms = "SAOStats.durability.actual",
+            perms = "SAOStats.stats.durability.actual",
             usage = "[actual]"
     )
     public void actual(@Sender Player player, @Hand ItemStack item, int actual) {
@@ -91,7 +91,7 @@ public class DurabilityCommand {
     @Command(
             aliases = "repaire",
             desc = "permet de réparer l'item",
-            perms = "SAOStats.durability.repare",
+            perms = "SAOStats.stats.durability.repare",
             usage = ""
     )
     public void repaire(@Sender Player player, @Hand ItemStack item, @Maybe Integer amount) {

@@ -145,7 +145,6 @@ public final class SAOStats extends JavaPlugin implements Listener {
                             double defense = itemInformations.getDoubleAttribute("defense");
                             damage -= (damage*defense);
                             if(damage < 0) damage = 0D;
-                            System.out.println("Defense : " + defense);
                         }
                     }
                 }
@@ -194,14 +193,21 @@ public final class SAOStats extends JavaPlugin implements Listener {
         cmdGraph.getBuilder().getInjector().install(new MoreModule());
 
         DispatcherNode attributeNode = cmdGraph.getRootDispatcherNode().registerNode("SAOStats");
-        attributeNode.registerNode("damage").registerCommands(new DamageCommand());
-        attributeNode.registerNode("critic").registerCommands(new CriticCommand());
-        attributeNode.registerNode("durability").registerCommands(new DurabilityCommand());
-        attributeNode.registerNode("defense").registerCommands(new DefenseCommand());
+
+        DispatcherNode statsNode = attributeNode.registerNode("stats");
+        statsNode.registerNode("damage").registerCommands(new DamageCommand());
+        statsNode.registerNode("critic").registerCommands(new CriticCommand());
+        statsNode.registerNode("durability").registerCommands(new DurabilityCommand());
+        statsNode.registerNode("defense").registerCommands(new DefenseCommand());
+
+        DispatcherNode customNode = attributeNode.registerNode("custom");
+        customNode.registerNode("lore").registerCommands(new LoreCommand());
+        customNode.registerNode("name").registerCommands(new NameCommand());
+
+
         attributeNode.registerNode("potion").registerCommands(new PotionCommand());
         attributeNode.registerNode("enchant").registerCommands(new EnchantCommand());
-        attributeNode.registerNode("attribute").registerCommands(new AttributesCommands());
-        attributeNode.registerNode("lore").registerCommands(new LoreCommand());
+        attributeNode.registerNode("attribute").registerCommands(new AttributesCommand());
 
         BukkitIntake bukkitIntake = new BukkitIntake(this, cmdGraph);
         bukkitIntake.register();

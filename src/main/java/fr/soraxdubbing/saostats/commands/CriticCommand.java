@@ -13,7 +13,7 @@ public class CriticCommand {
     @Command(
             aliases = "damage",
             desc = "Set the damage of the item if it's a critic hit",
-            perms = "SAOStats.critic.damage",
+            perms = "SAOStats.stats.critic.damage",
             usage = "[damage]"
     )
     public void damage(@Sender Player player, @Hand ItemStack item, Double damage) {
@@ -37,7 +37,7 @@ public class CriticCommand {
     @Command(
             aliases = "chance",
             desc = "Set the chance of the item to do a critic hit",
-            perms = "SAOStats.critic.chance",
+            perms = "SAOStats.stats.critic.chance",
             usage = "[chance]"
     )
     public void chance(@Sender Player player, @Hand ItemStack item, Double chance) {
@@ -62,7 +62,7 @@ public class CriticCommand {
     @Command(
             aliases = "reset",
             desc = "Reset the critic of the item",
-            perms = "SAOStats.critic.reset",
+            perms = "SAOStats.stats.critic.reset",
             usage = ""
     )
     public void reset(@Sender Player sender, @Hand ItemStack item){

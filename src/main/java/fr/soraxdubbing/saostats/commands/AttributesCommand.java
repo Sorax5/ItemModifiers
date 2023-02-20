@@ -7,12 +7,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.UUID;
 
-public class AttributesCommands {
+public class AttributesCommand {
 
         @Command(
                 aliases = "add",
@@ -25,6 +26,7 @@ public class AttributesCommands {
             try{
                 AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), attribute.name(), value, AttributeModifier.Operation.ADD_NUMBER);
                 itemMeta.addAttributeModifier(attribute,  modifier);
+                itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                 item.setItemMeta(itemMeta);
                 sender.sendMessage("§aL'attribut " + attribute.name() + " a été ajouté à l'item avec une valeur de " + value);
             }

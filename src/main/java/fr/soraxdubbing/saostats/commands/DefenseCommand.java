@@ -13,7 +13,7 @@ public class DefenseCommand {
     @Command(
             aliases = "set",
             desc = "Set the defense of the item in your hand",
-            perms = "SAOStats.defense",
+            perms = "SAOStats.stats.defense.set",
             usage = "[defense]"
     )
     public void set(@Sender Player player, @Hand ItemStack item, Double defense) {
@@ -37,7 +37,7 @@ public class DefenseCommand {
     @Command(
             aliases = "add",
             desc = "Add the defense of the item in your hand",
-            perms = "SAOStats.defense",
+            perms = "SAOStats.stats.defense.add",
             usage = "[defense]"
     )
     public void add(@Sender Player player, @Hand ItemStack item, Double defense){
@@ -60,12 +60,36 @@ public class DefenseCommand {
         }
     }
 
+    @Command(
+            aliases = "remove",
+            desc = "Remove the defense of the item in your hand",
+            perms = "SAOStats.stats.defense.remove",
+            usage = "[defense]"
+    )
+    public void remove(@Sender Player player, @Hand ItemStack item, Double defense){
+        NBTItem nbtItem = new NBTItem(item);
 
+        ItemInformations itemInformations = new ItemInformations();
+        if(nbtItem.hasKey("ItemInformations")){
+            itemInformations = nbtItem.getObject("ItemInformations", ItemInformations.class);
+        }
+
+        if(itemInformations.hasDoubleAttribute("defense")){
+            Double actualDefense = itemInformations.getDoubleAttribute("defense");
+            defense -= actualDefense;
+            itemInformations.removeDoubleAttribute("defense");
+            itemInformations.addDoubleAttribute("defense", defense);
+            player.sendMessage("§aLa défense de l'item a été diminuée de " + defense);
+        } else {
+            itemInformations.addDoubleAttribute("defense", defense);
+            player.sendMessage("§aLa défense de l'item a été définie à " + defense);
+        }
+    }
 
     @Command(
             aliases = "reset",
             desc = "Reset the defense of the item in your hand",
-            perms = "SAOStats.defense",
+            perms = "SAOStats.stats.defense.reset",
             usage = "reset"
     )
     public void reset(@Sender Player player, @Hand ItemStack item) {

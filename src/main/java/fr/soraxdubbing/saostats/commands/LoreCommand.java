@@ -17,19 +17,20 @@ public class LoreCommand {
     @Command(
             aliases = "set",
             desc = "Set the lore of an item",
-            perms = "SAOStats.lore.set",
+            perms = "SAOStats.custom.lore.set",
             usage = "[line] [lore]"
     )
     public void set(@Sender Player player, @Hand ItemStack item ,int a, @Text String b){
         ItemMeta itemMeta = getItemMeta(item);
+        String sLore = replaceColor(b);
 
         List<String> lore = getLore(item);
 
         try{
-            lore.set(a,b);
+            lore.set(a,sLore);
         }
         catch (IndexOutOfBoundsException e){
-            lore.add(b);
+            lore.add(sLore);
         }
         player.sendMessage("§aLa ligne [" + a + "] a été définie à " + b);
 
@@ -40,14 +41,15 @@ public class LoreCommand {
     @Command(
             aliases = "add",
             desc = "Add a line to the lore of an item",
-            perms = "SAOStats.lore.add",
+            perms = "SAOStats.custom.lore.add",
             usage = "[lore]"
     )
     public void add(@Sender Player player, @Hand ItemStack item, @Text String b) {
         ItemMeta itemMeta = getItemMeta(item);
+        String sLore = replaceColor(b);
 
         List<String> lore = getLore(item);
-        lore.add(b);
+        lore.add(sLore);
 
         itemMeta.setLore(lore);
         item.setItemMeta(itemMeta);
@@ -58,7 +60,7 @@ public class LoreCommand {
     @Command(
             aliases = "remove",
             desc = "Remove a line from the lore of an item",
-            perms = "SAOStats.lore.remove",
+            perms = "SAOStats.custom.lore.remove",
             usage = "[line]"
     )
     public void remove(@Sender Player player, @Hand ItemStack item, int b) {
@@ -81,7 +83,7 @@ public class LoreCommand {
     @Command(
             aliases = "clear",
             desc = "remove all the lore of an item",
-            perms = "SAOStats.lore.clear",
+            perms = "SAOStats.custom.lore.clear",
             usage = "[line]"
     )
     public void clear(@Sender Player player, @Hand ItemStack item) {
@@ -90,6 +92,23 @@ public class LoreCommand {
         itemMeta.setLore(new ArrayList<>());
         player.sendMessage("§aLe lore a été supprimée");
         item.setItemMeta(itemMeta);
+    }
+
+    @Command(
+            aliases = "list",
+            desc = "List all the lore of an item",
+            perms = "SAOStats.custom.lore.list",
+            usage = ""
+    )
+    public void list(@Sender Player player, @Hand ItemStack item) {
+        ItemMeta itemMeta = getItemMeta(item);
+
+        List<String> lore = getLore(item);
+
+        player.sendMessage("§aVoici le lore de l'item :");
+        for (int i = 0; i < lore.size(); i++) {
+            player.sendMessage("§a[" + i + "] §r§5§o" + lore.get(i));
+        }
     }
 
     private ItemMeta getItemMeta(ItemStack item){
@@ -107,5 +126,9 @@ public class LoreCommand {
             lore = new ArrayList<>();
         }
         return lore;
+    }
+
+    private String replaceColor(String s){
+        return s.replace("&", "§");
     }
 }

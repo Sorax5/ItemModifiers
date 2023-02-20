@@ -3,6 +3,8 @@ package fr.soraxdubbing.saostats.commands;
 import app.ashcon.intake.Command;
 import app.ashcon.intake.bukkit.parametric.annotation.Sender;
 import app.ashcon.intake.parametric.annotation.Text;
+import fr.soraxdubbing.saostats.module.annoted.Hand;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -18,14 +20,10 @@ public class LoreCommand {
             perms = "SAOStats.lore.set",
             usage = "[line] [lore]"
     )
-    public void set(@Sender Player player, int a, @Text String b) {
-        ItemStack item = player.getInventory().getItemInMainHand();
-        ItemMeta itemMeta = item.getItemMeta();
+    public void set(@Sender Player player, @Hand ItemStack item ,int a, @Text String b){
+        ItemMeta itemMeta = getItemMeta(item);
 
-        List<String> lore = itemMeta.getLore();
-        if (lore == null) {
-            lore = new ArrayList<>();
-        }
+        List<String> lore = getLore(item);
 
         try{
             lore.set(a,b);
@@ -33,7 +31,7 @@ public class LoreCommand {
         catch (IndexOutOfBoundsException e){
             lore.add(b);
         }
-        player.sendMessage("§aLa ligne " + a + " a été définie à " + b);
+        player.sendMessage("§aLa ligne [" + a + "] a été définie à " + b);
 
         itemMeta.setLore(lore);
         item.setItemMeta(itemMeta);
@@ -45,19 +43,16 @@ public class LoreCommand {
             perms = "SAOStats.lore.add",
             usage = "[lore]"
     )
-    public void add(@Sender Player player, @Text String b) {
-        ItemStack item = player.getInventory().getItemInMainHand();
-        ItemMeta itemMeta = item.getItemMeta();
+    public void add(@Sender Player player, @Hand ItemStack item, @Text String b) {
+        ItemMeta itemMeta = getItemMeta(item);
 
-        List<String> lore = itemMeta.getLore();
-        if (lore == null) {
-            lore = new ArrayList<>();
-        }
+        List<String> lore = getLore(item);
         lore.add(b);
-        player.sendMessage("§a La ligne " + b + " a été ajoutée");
 
         itemMeta.setLore(lore);
         item.setItemMeta(itemMeta);
+
+        player.sendMessage("§a La ligne [" + b + "] a été ajoutée");
     }
 
     @Command(
@@ -66,27 +61,17 @@ public class LoreCommand {
             perms = "SAOStats.lore.remove",
             usage = "[line]"
     )
-    public void remove(@Sender Player player, int b) {
-        ItemStack item = player.getInventory().getItemInMainHand();
+    public void remove(@Sender Player player, @Hand ItemStack item, int b) {
+        ItemMeta itemMeta = getItemMeta(item);
 
-        if (item.getType().isAir()) {
-            player.sendMessage("§cVous devez tenir un item en main !");
-            return;
-        }
-
-        ItemMeta itemMeta = item.getItemMeta();
-
-        List<String> lore = itemMeta.getLore();
-        if (lore == null) {
-            lore = new ArrayList<>();
-        }
+        List<String> lore = getLore(item);
 
         try{
             lore.remove(b);
             player.sendMessage("§aLa ligne " + b + " a été supprimée");
         }
         catch (IndexOutOfBoundsException e){
-            player.sendMessage("§cThis line doesn't exist !");
+            player.sendMessage("§cCette ligne n'existe pas");
         }
 
         itemMeta.setLore(lore);
@@ -99,18 +84,28 @@ public class LoreCommand {
             perms = "SAOStats.lore.clear",
             usage = "[line]"
     )
-    public void clear(@Sender Player player) {
-        ItemStack item = player.getInventory().getItemInMainHand();
-
-        if (item.getType().isAir()) {
-            player.sendMessage("§cVous devez tenir un item en main !");
-            return;
-        }
-
-        ItemMeta itemMeta = item.getItemMeta();
+    public void clear(@Sender Player player, @Hand ItemStack item) {
+        ItemMeta itemMeta = getItemMeta(item);
 
         itemMeta.setLore(new ArrayList<>());
         player.sendMessage("§aLe lore a été supprimée");
         item.setItemMeta(itemMeta);
+    }
+
+    private ItemMeta getItemMeta(ItemStack item){
+        ItemMeta itemMeta = item.getItemMeta();
+        if(itemMeta == null){
+            itemMeta = Bukkit.getItemFactory().getItemMeta(item.getType());
+        }
+        return itemMeta;
+    }
+
+    private List<String> getLore(ItemStack item){
+        ItemMeta itemMeta = getItemMeta(item);
+        List<String> lore = itemMeta.getLore();
+        if (lore == null) {
+            lore = new ArrayList<>();
+        }
+        return lore;
     }
 }

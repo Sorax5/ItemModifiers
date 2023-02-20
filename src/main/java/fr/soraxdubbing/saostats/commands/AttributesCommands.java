@@ -2,12 +2,13 @@ package fr.soraxdubbing.saostats.commands;
 
 import app.ashcon.intake.Command;
 import app.ashcon.intake.bukkit.parametric.annotation.Sender;
+import fr.soraxdubbing.saostats.module.annoted.Hand;
+import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.w3c.dom.Attr;
 
 import java.util.UUID;
 
@@ -19,22 +20,9 @@ public class AttributesCommands {
                 perms = "SAOStats.attributes.add",
                 usage = "[attribut] [valeur]"
         )
-        public void add(@Sender Player sender, Attribute attribute, int value) {
-            ItemStack item = sender.getInventory().getItemInMainHand();
-
-            if (item.getType().isAir()) {
-                sender.sendMessage("§cVous devez tenir un item en main !");
-                return;
-            }
-
-            if(!item.hasItemMeta()){
-                sender.sendMessage("§cL'item n'a pas de métadonnées !");
-                return;
-            }
-
-            ItemMeta itemMeta = item.getItemMeta();
+        public void add(@Sender Player sender, @Hand ItemStack item, Attribute attribute, int value) {
+            ItemMeta itemMeta = getItemMeta(item);
             try{
-                // if item is armor
                 AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), attribute.name(), value, AttributeModifier.Operation.ADD_NUMBER);
                 itemMeta.addAttributeModifier(attribute,  modifier);
                 item.setItemMeta(itemMeta);
@@ -52,20 +40,8 @@ public class AttributesCommands {
                 perms = "SAOStats.attributes.remove",
                 usage = "[attribut]"
         )
-    public void remove(@Sender Player sender, Attribute attribute) {
-        ItemStack item = sender.getInventory().getItemInMainHand();
-
-        if (item.getType().isAir()) {
-            sender.sendMessage("§cVous devez tenir un item en main !");
-            return;
-        }
-
-        if(!item.hasItemMeta()){
-            sender.sendMessage("§cL'item n'a pas de métadonnées !");
-            return;
-        }
-
-        ItemMeta itemMeta = item.getItemMeta();
+    public void remove(@Sender Player sender, @Hand ItemStack item, Attribute attribute) {
+        ItemMeta itemMeta = getItemMeta(item);
         try{
             itemMeta.removeAttributeModifier(attribute);
         }
@@ -73,6 +49,15 @@ public class AttributesCommands {
             sender.sendMessage("§cL'attribut n'existe pas !");
             return;
         }
+        item.setItemMeta(itemMeta);
+        sender.sendMessage("§aL'attribut " + attribute.name() + " a été retiré de l'item");
     }
 
+    private ItemMeta getItemMeta(ItemStack item){
+        ItemMeta itemMeta = item.getItemMeta();
+        if(itemMeta == null){
+            itemMeta = Bukkit.getItemFactory().getItemMeta(item.getType());
+        }
+        return itemMeta;
+    }
 }

@@ -4,6 +4,7 @@ import app.ashcon.intake.Command;
 import app.ashcon.intake.bukkit.parametric.annotation.Sender;
 import de.tr7zw.nbtapi.NBTItem;
 import fr.soraxdubbing.saostats.ItemInformations;
+import fr.soraxdubbing.saostats.module.annoted.Hand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionType;
@@ -16,14 +17,7 @@ public class PotionCommand {
             perms = "SAOStats.potion.add",
             usage = "[potion] [level]"
     )
-    public void add(@Sender Player player, PotionType potionType, int level) {
-        ItemStack item = player.getInventory().getItemInMainHand();
-
-        if (item.getType().isAir()) {
-            player.sendMessage("§cVous devez tenir un item en main !");
-            return;
-        }
-
+    public void add(@Sender Player player, @Hand ItemStack item, PotionType potionType, int level) {
         NBTItem nbtItem = new NBTItem(item);
 
         ItemInformations itemInformations = new ItemInformations();
@@ -52,14 +46,7 @@ public class PotionCommand {
             perms = "SAOStats.potion.remove",
             usage = "[potion]"
     )
-    public void remove(@Sender Player player, String potionType) {
-        ItemStack item = player.getInventory().getItemInMainHand();
-
-        if (item.getType().isAir()) {
-            player.sendMessage("§cVous devez tenir un item en main !");
-            return;
-        }
-
+    public void remove(@Sender Player player, @Hand ItemStack item, String potionType) {
         NBTItem nbtItem = new NBTItem(item);
 
         ItemInformations itemInformations = new ItemInformations();

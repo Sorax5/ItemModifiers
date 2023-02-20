@@ -17,9 +17,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public final class SAOStats extends JavaPlugin implements Listener {
 
     private static SAOStats instance;
@@ -31,7 +28,6 @@ public final class SAOStats extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
         PotionThread potionThread = new PotionThread();
         potionThread.runTaskTimer(this,0,10);
-
     }
 
     @Override
@@ -178,8 +174,8 @@ public final class SAOStats extends JavaPlugin implements Listener {
                     if(nbt.hasKey("ItemInformations")) {
                         ItemInformations itemInformations = nbt.getObject("ItemInformations", ItemInformations.class);
 
-                        if(itemInformations.hasIntAttribute("defense")){
-                            int defense = itemInformations.getIntAttribute("defense");
+                        if(itemInformations.hasDoubleAttribute("defense")){
+                            double defense = itemInformations.getDoubleAttribute("defense");
                             damage -= defense;
                             if(damage < 0) damage = 0D;
                         }
@@ -197,17 +193,15 @@ public final class SAOStats extends JavaPlugin implements Listener {
 
         cmdGraph.getBuilder().getInjector().install(new MoreModule());
 
-        DispatcherNode loreNode = cmdGraph.getRootDispatcherNode().registerNode("lore");
-        loreNode.registerCommands(new LoreCommand());
-
         DispatcherNode attributeNode = cmdGraph.getRootDispatcherNode().registerNode("SAOStats");
         attributeNode.registerNode("damage").registerCommands(new DamageCommand());
         attributeNode.registerNode("critic").registerCommands(new CriticCommand());
         attributeNode.registerNode("durability").registerCommands(new DurabilityCommand());
-        attributeNode.registerCommands(new DefenseCommand());
+        attributeNode.registerNode("defense").registerCommands(new DefenseCommand());
         attributeNode.registerNode("potion").registerCommands(new PotionCommand());
         attributeNode.registerNode("enchant").registerCommands(new EnchantCommand());
         attributeNode.registerNode("attribute").registerCommands(new AttributesCommands());
+        attributeNode.registerNode("lore").registerCommands(new LoreCommand());
 
         BukkitIntake bukkitIntake = new BukkitIntake(this, cmdGraph);
         bukkitIntake.register();

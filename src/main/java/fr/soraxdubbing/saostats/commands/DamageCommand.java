@@ -4,6 +4,7 @@ import app.ashcon.intake.Command;
 import app.ashcon.intake.bukkit.parametric.annotation.Sender;
 import de.tr7zw.nbtapi.NBTItem;
 import fr.soraxdubbing.saostats.ItemInformations;
+import fr.soraxdubbing.saostats.module.annoted.Hand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -15,14 +16,7 @@ public class DamageCommand {
             perms = "SAOStats.damage.max",
             usage = "[max]"
     )
-    public void max(@Sender Player player, Double max) {
-        ItemStack item = player.getInventory().getItemInMainHand();
-
-        if (item.getType().isAir()) {
-            player.sendMessage("§cVous devez tenir un item en main !");
-            return;
-        }
-
+    public void max(@Sender Player player, @Hand ItemStack item, Double max) {
         NBTItem nbtItem = new NBTItem(item);
 
         ItemInformations itemInformations = new ItemInformations();
@@ -47,14 +41,7 @@ public class DamageCommand {
             perms = "SAOStats.damage.min",
             usage = "[min]"
     )
-    public void min(@Sender Player player, Double min) {
-        ItemStack item = player.getInventory().getItemInMainHand();
-
-        if (item.getType().isAir()) {
-            player.sendMessage("§cVous devez tenir un item en main !");
-            return;
-        }
-
+    public void min(@Sender Player player, @Hand ItemStack item, Double min) {
         NBTItem nbtItem = new NBTItem(item);
 
         ItemInformations itemInformations = new ItemInformations();

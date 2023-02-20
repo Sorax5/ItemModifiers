@@ -23,16 +23,10 @@ public final class SAOStats extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
         instance = this;
         getServer().getPluginManager().registerEvents(this, this);
         PotionThread potionThread = new PotionThread();
         potionThread.runTaskTimer(this,0,10);
-    }
-
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
     }
 
     @EventHandler
@@ -203,6 +197,7 @@ public final class SAOStats extends JavaPlugin implements Listener {
         DispatcherNode customNode = attributeNode.registerNode("custom");
         customNode.registerNode("lore").registerCommands(new LoreCommand());
         customNode.registerNode("name").registerCommands(new NameCommand());
+        customNode.registerNode("glow").registerCommands(new GlowingCommand());
 
 
         attributeNode.registerNode("potion").registerCommands(new PotionCommand());
@@ -213,6 +208,10 @@ public final class SAOStats extends JavaPlugin implements Listener {
         bukkitIntake.register();
     }
 
+    /**
+     * Instance de la classe
+     * @return SAOStats
+     */
     public static SAOStats getInstance() {
         return instance;
     }

@@ -1,29 +1,22 @@
 package fr.soraxdubbing.saostats.commands;
 
 import app.ashcon.intake.Command;
-import app.ashcon.intake.CommandException;
-import app.ashcon.intake.argument.Namespace;
 import app.ashcon.intake.bukkit.parametric.annotation.Sender;
-import app.ashcon.intake.completion.CommandCompleter;
 import de.tr7zw.nbtapi.NBTItem;
 import fr.soraxdubbing.saostats.ItemInformations;
-import fr.soraxdubbing.saostats.SAOStats;
+import fr.soraxdubbing.saostats.module.annoted.Hand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CriticCommand {
 
     @Command(
             aliases = "damage",
             desc = "Set the damage of the item if it's a critic hit",
-            perms = "SAOStats.critic.damage",
+            perms = "SAOStats.stats.critic.damage",
             usage = "[damage]"
     )
-    public void damage(@Sender Player player, Double damage) {
-        ItemStack item = player.getInventory().getItemInMainHand();
+    public void damage(@Sender Player player, @Hand ItemStack item, Double damage) {
         NBTItem nbtItem = new NBTItem(item);
 
         ItemInformations itemInformations = new ItemInformations();
@@ -38,18 +31,16 @@ public class CriticCommand {
         player.sendMessage("§aLe damage du coup critique de l'item a été défini à " + damage + " !");
 
         nbtItem.setObject("ItemInformations", itemInformations);
-        nbtItem.getItem();
         player.getInventory().setItemInMainHand(nbtItem.getItem());
     }
 
     @Command(
             aliases = "chance",
             desc = "Set the chance of the item to do a critic hit",
-            perms = "SAOStats.critic.chance",
+            perms = "SAOStats.stats.critic.chance",
             usage = "[chance]"
     )
-    public void chance(@Sender Player player, Double chance) {
-        ItemStack item = player.getInventory().getItemInMainHand();
+    public void chance(@Sender Player player, @Hand ItemStack item, Double chance) {
         NBTItem nbtItem = new NBTItem(item);
 
         ItemInformations itemInformations = new ItemInformations();
@@ -64,7 +55,32 @@ public class CriticCommand {
         player.sendMessage("§aLa chance du coup critique de l'item a été définie à " + chance + " !");
 
         nbtItem.setObject("ItemInformations", itemInformations);
-        nbtItem.getItem();
         player.getInventory().setItemInMainHand(nbtItem.getItem());
+    }
+
+    // reset command
+    @Command(
+            aliases = "reset",
+            desc = "Reset the critic of the item",
+            perms = "SAOStats.stats.critic.reset",
+            usage = ""
+    )
+    public void reset(@Sender Player sender, @Hand ItemStack item){
+        NBTItem nbtItem = new NBTItem(item);
+
+        ItemInformations itemInformations = new ItemInformations();
+        if(nbtItem.hasKey("ItemInformations")){
+            itemInformations = nbtItem.getObject("ItemInformations", ItemInformations.class);
+            if(itemInformations.hasDoubleAttribute("critic.chance")){
+                itemInformations.removeDoubleAttribute("critic.chance");
+            }
+            if(itemInformations.hasDoubleAttribute("critic.damage")){
+                itemInformations.removeDoubleAttribute("critic.damage");
+            }
+        }
+        sender.sendMessage("§aLes attributs du coup critique de l'item ont été réinitialisés !");
+
+        nbtItem.setObject("ItemInformations", itemInformations);
+        sender.getInventory().setItemInMainHand(nbtItem.getItem());
     }
 }

@@ -5,6 +5,8 @@ import app.ashcon.intake.bukkit.parametric.annotation.Sender;
 import app.ashcon.intake.parametric.annotation.Maybe;
 import de.tr7zw.nbtapi.NBTItem;
 import fr.soraxdubbing.saostats.ItemInformations;
+import fr.soraxdubbing.saostats.module.annoted.Hand;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -20,19 +22,12 @@ public class DurabilityCommand {
             perms = "SAOStats.durability.max",
             usage = "[max] [value]"
     )
-    public void max(@Sender Player player, int max) {
-        ItemStack item = player.getInventory().getItemInMainHand();
+    public void max(@Sender Player player, @Hand ItemStack item, int max) {
 
-        if(item.hasItemMeta()){
-            ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.setUnbreakable(true);
-            item.setItemMeta(itemMeta);
-        }
-
-        if (item.getType().isAir()) {
-            player.sendMessage("§cVous devez tenir un item en main !");
-            return;
-        }
+        // Unbreakable
+        ItemMeta itemMeta = getItemMeta(item);
+        itemMeta.setUnbreakable(true);
+        item.setItemMeta(itemMeta);
 
         NBTItem nbtItem = new NBTItem(item);
 
@@ -67,20 +62,10 @@ public class DurabilityCommand {
             perms = "SAOStats.durability.actual",
             usage = "[actual] [value]"
     )
-    public void actual(@Sender Player player, int actual) {
-        ItemStack item = player.getInventory().getItemInMainHand();
-
-        if(item.hasItemMeta()){
-            ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.setUnbreakable(true);
-            item.setItemMeta(itemMeta);
-        }
-
-
-        if (item.getType().isAir()) {
-            player.sendMessage("§cVous devez tenir un item en main !");
-            return;
-        }
+    public void actual(@Sender Player player, @Hand ItemStack item, int actual) {
+        ItemMeta itemMeta = getItemMeta(item);
+        itemMeta.setUnbreakable(true);
+        item.setItemMeta(itemMeta);
 
         NBTItem nbtItem = new NBTItem(item);
 
@@ -109,19 +94,10 @@ public class DurabilityCommand {
             perms = "SAOStats.durability.repare",
             usage = "[value]"
     )
-    public void repaire(@Sender Player player, @Maybe Integer amount) {
-        ItemStack item = player.getInventory().getItemInMainHand();
-
-        if(item.hasItemMeta()){
-            ItemMeta itemMeta = item.getItemMeta();
-            itemMeta.setUnbreakable(true);
-            item.setItemMeta(itemMeta);
-        }
-
-        if (item.getType().isAir()) {
-            player.sendMessage("§cVous devez tenir un item en main !");
-            return;
-        }
+    public void repaire(@Sender Player player, @Hand ItemStack item, @Maybe Integer amount) {
+        ItemMeta itemMeta = getItemMeta(item);
+        itemMeta.setUnbreakable(true);
+        item.setItemMeta(itemMeta);
 
         NBTItem nbtItem = new NBTItem(item);
 
@@ -129,7 +105,6 @@ public class DurabilityCommand {
         if(nbtItem.hasKey("ItemInformations")){
             itemInformations = nbtItem.getObject("ItemInformations", ItemInformations.class);
         }
-
 
         if(amount != null){
             itemInformations.addIntAttribute("durability.actual", amount + itemInformations.getIntAttribute("durability.actual"));
@@ -191,6 +166,11 @@ public class DurabilityCommand {
 
     }
 
-
-
+    private ItemMeta getItemMeta(ItemStack item){
+        ItemMeta itemMeta = item.getItemMeta();
+        if(itemMeta == null){
+            itemMeta = Bukkit.getItemFactory().getItemMeta(item.getType());
+        }
+        return itemMeta;
+    }
 }

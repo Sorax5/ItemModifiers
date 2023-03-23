@@ -3,43 +3,49 @@ package fr.soraxdubbing.saostats.commands;
 import app.ashcon.intake.Command;
 import app.ashcon.intake.bukkit.parametric.annotation.Sender;
 import app.ashcon.intake.parametric.annotation.Text;
+import fr.soraxdubbing.saostats.module.annoted.Hand;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
 
 public class NameCommand {
 
     @Command(
             aliases = "set",
-            desc = "Set the name of the item in your hand",
-            perms = "SAOStats.health.set",
-            usage = "[value]"
+            desc = "Change le nom de l'item",
+            perms = "SAOStats.custom.name.set",
+            usage = "[nom]"
     )
-    public void set(@Sender Player player, @Text String name) {
-        ItemStack item = player.getInventory().getItemInMainHand();
+    public void set(@Sender Player sender, @Hand ItemStack item, @Text String name) {
+        ItemMeta itemMeta = getItemMeta(item);
+        itemMeta.setDisplayName(replaceColor(name));
+        item.setItemMeta(itemMeta);
+        sender.sendMessage("§aLe nom de l'item a été changé en " + name);
+    }
 
-        if (item.getType().isAir()) {
-            player.sendMessage("§cVous devez tenir un item en main !");
-            return;
-        }
-        if (name.contains("&")) {
-            name = name.replaceAll("&", "§");
-        }
+    @Command(
+            aliases = "reset",
+            desc = "Réinitialise le nom de l'item",
+            perms = "SAOStats.custom.name.reset",
+            usage = ""
+    )
+    public void reset(@Sender Player sender, @Hand ItemStack item){
+        ItemMeta itemMeta = getItemMeta(item);
+        itemMeta.setDisplayName(null);
+        item.setItemMeta(itemMeta);
+        sender.sendMessage("§aLe nom de l'item a été réinitialisé");
+    }
 
+    private ItemMeta getItemMeta(ItemStack item){
         ItemMeta itemMeta = item.getItemMeta();
-        try{
-            itemMeta.setDisplayName(name);
-            itemMeta.setLocalizedName(name);
-            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            item.setItemMeta(itemMeta);
-            player.sendMessage("§aLe nom de l'item a été définie comme: " + name);
-            player.getInventory().setItemInMainHand(item);
+        if(itemMeta == null){
+            itemMeta = Bukkit.getItemFactory().getItemMeta(item.getType());
         }
-        catch (IllegalArgumentException e){
-            player.sendMessage("§cErreur dans le changement de nom");
-            return;
-        }
+        return itemMeta;
+    }
+
+    private String replaceColor(String message){
+        return message.replaceAll("&", "§");
     }
 }

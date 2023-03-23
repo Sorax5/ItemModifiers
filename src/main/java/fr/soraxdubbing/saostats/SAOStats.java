@@ -23,17 +23,10 @@ public final class SAOStats extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
         instance = this;
         getServer().getPluginManager().registerEvents(this, this);
         PotionThread potionThread = new PotionThread();
         potionThread.runTaskTimer(this,0,10);
-
-    }
-
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
     }
 
     @EventHandler
@@ -68,6 +61,9 @@ public final class SAOStats extends JavaPlugin implements Listener {
                                 livingEntity.getWorld().spawnParticle(org.bukkit.Particle.BLOCK_CRACK,location,10,0.5,0.5,0.5,0.5,location.getBlock().getBlockData());
                                 livingEntity.getWorld().playSound(location,"minecraft:block.anvil.land",1,1);
                             }
+                        }else{
+                            // Dans le cas ou l'objet est cassé et dans la main du joueur on annule les dégats
+                            event.setCancelled(true);
                         }
                     }
 
@@ -147,7 +143,6 @@ public final class SAOStats extends JavaPlugin implements Listener {
                             double defense = itemInformations.getDoubleAttribute("defense");
                             damage -= (damage*defense);
                             if(damage < 0) damage = 0D;
-                            System.out.println("Defense : " + defense);
                         }
                     }
                 }
@@ -176,8 +171,8 @@ public final class SAOStats extends JavaPlugin implements Listener {
                     if(nbt.hasKey("ItemInformations")) {
                         ItemInformations itemInformations = nbt.getObject("ItemInformations", ItemInformations.class);
 
-                        if(itemInformations.hasIntAttribute("defense")){
-                            int defense = itemInformations.getIntAttribute("defense");
+                        if(itemInformations.hasDoubleAttribute("defense")){
+                            double defense = itemInformations.getDoubleAttribute("defense");
                             damage -= defense;
                             if(damage < 0) damage = 0D;
                         }
@@ -195,6 +190,24 @@ public final class SAOStats extends JavaPlugin implements Listener {
 
         cmdGraph.getBuilder().getInjector().install(new MoreModule());
 
+        DispatcherNode attributeNode = cmdGraph.getRootDispatcherNode().registerNode("SAOStats");
+
+        DispatcherNode statsNode = attributeNode.registerNode("stats");
+        statsNode.registerNode("damage").registerCommands(new DamageCommand());
+        statsNode.registerNode("critic").registerCommands(new CriticCommand());
+        statsNode.registerNode("durability").registerCommands(new DurabilityCommand());
+        statsNode.registerNode("defense").registerCommands(new DefenseCommand());
+
+        DispatcherNode customNode = attributeNode.registerNode("custom");
+        customNode.registerNode("lore").registerCommands(new LoreCommand());
+        customNode.registerNode("name").registerCommands(new NameCommand());
+        customNode.registerNode("glow").registerCommands(new GlowingCommand());
+
+
+        attributeNode.registerNode("potion").registerCommands(new PotionCommand());
+        attributeNode.registerNode("enchant").registerCommands(new EnchantCommand());
+        attributeNode.registerNode("attribute").registerCommands(new AttributesCommand());
+
         DispatcherNode cmd = cmdGraph.getRootDispatcherNode().registerNode("SAOStats");
         cmd.registerNode("damage").registerCommands(new DamageCommand());
         cmd.registerNode("critic").registerCommands(new CriticCommand());
@@ -211,6 +224,10 @@ public final class SAOStats extends JavaPlugin implements Listener {
         bukkitIntake.register();
     }
 
+    /**
+     * Instance de la classe
+     * @return SAOStats
+     */
     public static SAOStats getInstance() {
         return instance;
     }
